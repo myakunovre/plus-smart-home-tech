@@ -16,7 +16,6 @@ public abstract class BaseSensorEventHandler<T extends SpecificRecordBase> imple
 
     protected abstract T mapToAvro(SensorEvent event);
 
-   // public final TopicType SENSOR_EVENTS;
     public final String SENSOR_EVENTS = "telemetry.sensors.v1";
 
     @Override
