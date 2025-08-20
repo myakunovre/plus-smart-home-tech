@@ -6,21 +6,26 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig;
+import ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig.TopicType;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.EnumMap;
 
 @Slf4j
 @Component
 public class KafkaEventProducer implements AutoCloseable {
 
     protected final KafkaProducer<String, SpecificRecordBase> producer;
+    protected final EnumMap<TopicType, String> topics;
 
     public KafkaEventProducer(KafkaConfig kafkaConfig) {
-        this.producer = new KafkaProducer<>(kafkaConfig.getProperties());
+        this.topics = kafkaConfig.getProducer().getTopics();
+        this.producer = new KafkaProducer<>(kafkaConfig.getProducer().getProperties());
     }
 
-    public void send(SpecificRecordBase event, String hubId, Instant timeStamp, String topic) {
+    public void send(SpecificRecordBase event, String hubId, Instant timeStamp, KafkaConfig.TopicType topicType) {
+        String topic = topics.get(topicType);
         ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(
                 topic,
                 null,

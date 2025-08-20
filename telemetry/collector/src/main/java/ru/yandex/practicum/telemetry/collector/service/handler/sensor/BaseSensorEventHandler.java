@@ -8,6 +8,8 @@ import ru.yandex.practicum.telemetry.collector.model.sensors.SensorEvent;
 import ru.yandex.practicum.telemetry.collector.service.KafkaEventProducer;
 import ru.yandex.practicum.telemetry.collector.service.handler.SensorEventHandler;
 
+import static ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig.TopicType.SENSORS_EVENTS;
+
 @Slf4j
 @RequiredArgsConstructor
 public abstract class BaseSensorEventHandler<T extends SpecificRecordBase> implements SensorEventHandler {
@@ -15,8 +17,6 @@ public abstract class BaseSensorEventHandler<T extends SpecificRecordBase> imple
     protected final KafkaEventProducer producer;
 
     protected abstract T mapToAvro(SensorEvent event);
-
-    public final String SENSOR_EVENTS = "telemetry.sensors.v1";
 
     @Override
     public void handle(SensorEvent event) {
@@ -33,6 +33,6 @@ public abstract class BaseSensorEventHandler<T extends SpecificRecordBase> imple
                 .setPayload(payload)
                 .build();
 
-        producer.send(eventAvro, event.getHubId(), event.getTimestamp(), SENSOR_EVENTS);
+        producer.send(eventAvro, event.getHubId(), event.getTimestamp(), SENSORS_EVENTS);
     }
 }

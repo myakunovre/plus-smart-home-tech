@@ -8,6 +8,8 @@ import ru.yandex.practicum.telemetry.collector.model.hub.HubEvent;
 import ru.yandex.practicum.telemetry.collector.service.KafkaEventProducer;
 import ru.yandex.practicum.telemetry.collector.service.handler.HubEventHandler;
 
+import static ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig.TopicType.HUBS_EVENTS;
+
 @Slf4j
 @RequiredArgsConstructor
 public abstract class BaseHubEventHandler<T extends SpecificRecordBase> implements HubEventHandler {
@@ -15,8 +17,6 @@ public abstract class BaseHubEventHandler<T extends SpecificRecordBase> implemen
     protected final KafkaEventProducer producer;
 
     protected abstract T mapToAvro(HubEvent event);
-
-    public final String HUB_EVENTS = "telemetry.hubs.v1";
 
     @Override
     public void handle(HubEvent event) {
@@ -32,6 +32,6 @@ public abstract class BaseHubEventHandler<T extends SpecificRecordBase> implemen
                 .setPayload(payload)
                 .build();
 
-        producer.send(eventAvro, event.getHubId(), event.getTimestamp(), HUB_EVENTS);
+        producer.send(eventAvro, event.getHubId(), event.getTimestamp(), HUBS_EVENTS);
     }
 }
