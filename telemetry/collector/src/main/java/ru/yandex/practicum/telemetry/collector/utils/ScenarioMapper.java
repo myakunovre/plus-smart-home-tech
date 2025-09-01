@@ -6,6 +6,8 @@ import ru.yandex.practicum.kafka.telemetry.event.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.yandex.practicum.grpc.telemetry.event.ScenarioConditionProto.ValueCase.BOOL_VALUE;
+
 public class ScenarioMapper {
 
     // Маппер для ConditionType (enum)
@@ -38,13 +40,37 @@ public class ScenarioMapper {
         if (condition == null) {
             return null;
         }
-        return ScenarioConditionAvro.newBuilder()
-                .setSensorId(condition.getSensorId())
-                .setType(map(condition.getType()))
-                .setOperation(map(condition.getOperation()))
-//                .setValue(condition.getValue())
-                .setValue(condition.getIntValue())
-                .build();
+
+        int intValue;
+        boolean boolValue;
+
+        if (condition.getValueCase().equals(BOOL_VALUE)) {
+            boolValue = condition.getBoolValue();
+
+            return ScenarioConditionAvro.newBuilder()
+                    .setSensorId(condition.getSensorId())
+                    .setType(map(condition.getType()))
+                    .setOperation(map(condition.getOperation()))
+                    .setValue(boolValue)
+                    .build();
+        } else {
+
+            intValue = condition.getIntValue();
+
+            return ScenarioConditionAvro.newBuilder()
+                    .setSensorId(condition.getSensorId())
+                    .setType(map(condition.getType()))
+                    .setOperation(map(condition.getOperation()))
+                    .setValue(intValue)
+                    .build();
+        }
+
+//        return ScenarioConditionAvro.newBuilder()
+//                .setSensorId(condition.getSensorId())
+//                .setType(map(condition.getType()))
+//                .setOperation(map(condition.getOperation()))
+//                .setValue(condition.getIntValue())
+//                .build();
     }
 
     // Маппер для DeviceAction
