@@ -1,4 +1,6 @@
 collector:
+  grpc:
+    port: 59091
   kafka:
     producer:
       properties:
