@@ -1,7 +1,7 @@
 package ru.yandex.practicum.telemetry.collector.utils;
 
+import ru.yandex.practicum.grpc.telemetry.event.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
-import ru.yandex.practicum.telemetry.collector.model.hub.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class ScenarioMapper {
 
     // Маппер для ConditionType (enum)
-    public static ConditionTypeAvro map(ConditionType type) {
+    public static ConditionTypeAvro map(ConditionTypeProto type) {
         if (type == null) {
             return null;
         }
@@ -17,7 +17,7 @@ public class ScenarioMapper {
     }
 
     // Маппер для ConditionOperation (enum)
-    public static ConditionOperationAvro map(ConditionOperation operation) {
+    public static ConditionOperationAvro map(ConditionOperationProto operation) {
         if (operation == null) {
             return null;
         }
@@ -26,7 +26,7 @@ public class ScenarioMapper {
     }
 
     // Маппер для ActionType (enum)
-    public static ActionTypeAvro map(ActionType type) {
+    public static ActionTypeAvro map(ActionTypeProto type) {
         if (type == null) {
             return null;
         }
@@ -34,7 +34,7 @@ public class ScenarioMapper {
     }
 
     // Маппер для ScenarioCondition
-    public static ScenarioConditionAvro map(ScenarioCondition condition) {
+    public static ScenarioConditionAvro map(ScenarioConditionProto condition) {
         if (condition == null) {
             return null;
         }
@@ -42,12 +42,13 @@ public class ScenarioMapper {
                 .setSensorId(condition.getSensorId())
                 .setType(map(condition.getType()))
                 .setOperation(map(condition.getOperation()))
-                .setValue(condition.getValue())
+//                .setValue(condition.getValue())
+                .setValue(condition.getValueCase())
                 .build();
     }
 
     // Маппер для DeviceAction
-    public static DeviceActionAvro map(DeviceAction action) {
+    public static DeviceActionAvro map(DeviceActionProto action) {
         if (action == null) {
             return null;
         }
@@ -59,7 +60,7 @@ public class ScenarioMapper {
     }
 
     // Маппер для списка ScenarioCondition
-    public static List<ScenarioConditionAvro> mapConditions(List<ScenarioCondition> conditions) {
+    public static List<ScenarioConditionAvro> mapConditions(List<ScenarioConditionProto> conditions) {
         if (conditions == null) {
             return null;
         }
@@ -69,7 +70,7 @@ public class ScenarioMapper {
     }
 
     // Маппер для списка DeviceAction
-    public static List<DeviceActionAvro> mapActions(List<DeviceAction> actions) {
+    public static List<DeviceActionAvro> mapActions(List<DeviceActionProto> actions) {
         if (actions == null) {
             return null;
         }
