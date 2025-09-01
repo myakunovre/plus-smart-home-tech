@@ -64,13 +64,6 @@ public class ScenarioMapper {
                     .setValue(intValue)
                     .build();
         }
-
-//        return ScenarioConditionAvro.newBuilder()
-//                .setSensorId(condition.getSensorId())
-//                .setType(map(condition.getType()))
-//                .setOperation(map(condition.getOperation()))
-//                .setValue(condition.getIntValue())
-//                .build();
     }
 
     // Маппер для DeviceAction

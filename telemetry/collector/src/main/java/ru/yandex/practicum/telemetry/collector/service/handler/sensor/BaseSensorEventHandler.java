@@ -18,13 +18,10 @@ public abstract class BaseSensorEventHandler<T extends SpecificRecordBase> imple
 
     protected final KafkaEventProducer producer;
 
-//    protected abstract T mapToAvro(SensorEvent event);
     protected abstract T mapToAvro(SensorEventProto event);
 
     @Override
-//    public void handle(SensorEvent event) {
     public void handle(SensorEventProto event) {
-//        if (!event.getType().equals(getMessageType())) {
         if (!event.getPayloadCase().equals(getMessageType())) {
             throw new IllegalArgumentException("Неизвестный тип события: " + event.getPayloadCase());
         }
@@ -44,7 +41,6 @@ public abstract class BaseSensorEventHandler<T extends SpecificRecordBase> imple
                 .setPayload(payload)
                 .build();
 
-//        producer.send(eventAvro, event.getHubId(), event.getTimestamp(), SENSORS_EVENTS);
         producer.send(eventAvro, event.getHubId(), instant, SENSORS_EVENTS);
     }
 }

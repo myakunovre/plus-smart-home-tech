@@ -18,13 +18,10 @@ public abstract class BaseHubEventHandler<T extends SpecificRecordBase> implemen
 
     protected final KafkaEventProducer producer;
 
-//    protected abstract T mapToAvro(HubEvent event);
     protected abstract T mapToAvro(HubEventProto event);
 
     @Override
-//    public void handle(HubEvent event) {
     public void handle(HubEventProto event) {
-//        if (!event.getType().equals(getMessageType())) {
         if (!event.getPayloadCase().equals(getMessageType())) {
             throw new IllegalArgumentException("Неизвестный тип события: " + event.getPayloadCase());
         }
