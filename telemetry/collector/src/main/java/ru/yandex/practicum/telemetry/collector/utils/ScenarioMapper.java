@@ -43,7 +43,7 @@ public class ScenarioMapper {
                 .setType(map(condition.getType()))
                 .setOperation(map(condition.getOperation()))
 //                .setValue(condition.getValue())
-                .setValue(condition.getValueCase())
+                .setValue(condition.getIntValue())
                 .build();
     }
 
