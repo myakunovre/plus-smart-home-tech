@@ -16,10 +16,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 import ru.yandex.practicum.telemetry.aggregator.config.KafkaConfig;
 
 import java.time.Duration;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,8 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
-//@RequiredArgsConstructor
-//@NoArgsConstructor
 public class AggregationStarter {
 
     // ... объявление полей и конструктора ...
@@ -77,10 +72,19 @@ public class AggregationStarter {
                     TopicPartition tp = new TopicPartition(record.topic(), record.partition());
                     currentOffsets.put(tp, new OffsetAndMetadata(record.offset() + 1));
                 }
+
+                if (!currentOffsets.isEmpty()) {
+                    consumer.commitAsync(new HashMap<>(currentOffsets), (offsets, exception) -> {
+                        if (exception != null) {
+                            log.warn("Failed to commit offsets: {}", offsets, exception);
+                        }
+                    });
+                }
             }
 
         } catch (WakeupException ignored) {
             // игнорируем - закрываем консьюмер и продюсер в блоке finally
+            log.info("Consumer shutdown detected.");
         } catch (Exception e) {
             log.error("Ошибка во время обработки событий от датчиков", e);
         } finally {
@@ -92,6 +96,10 @@ public class AggregationStarter {
 
                 // здесь нужно вызвать метод продюсера для сброса данных в буффере
                 // здесь нужно вызвать метод консьюмера для фиксиции смещений
+                producer.flush();
+                if (!currentOffsets.isEmpty()) {
+                    consumer.commitSync(currentOffsets);
+                }
 
             } finally {
                 log.info("Закрываем консьюмер");
