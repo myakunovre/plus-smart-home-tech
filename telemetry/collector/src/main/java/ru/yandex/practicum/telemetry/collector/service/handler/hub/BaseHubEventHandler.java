@@ -10,7 +10,7 @@ import ru.yandex.practicum.telemetry.collector.service.handler.HubEventHandler;
 
 import java.time.Instant;
 
-import static ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig.TopicType.HUBS_EVENTS;
+import static ru.yandex.practicum.telemetry.collector.config.KafkaConfig.TopicType.HUBS_EVENTS;
 
 @Slf4j
 @RequiredArgsConstructor
