@@ -1,4 +1,4 @@
-package ru.yandex.practicum.telemetry.collector.configuration;
+package ru.yandex.practicum.telemetry.collector.config;
 
 import lombok.Getter;
 import lombok.Setter;

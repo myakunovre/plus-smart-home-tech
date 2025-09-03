@@ -1,6 +1,10 @@
-collector:
-  grpc:
+grpc:
+  server:
     port: 59091
+    reflection-service-enabled: true
+
+
+collector:
   kafka:
     producer:
       properties:

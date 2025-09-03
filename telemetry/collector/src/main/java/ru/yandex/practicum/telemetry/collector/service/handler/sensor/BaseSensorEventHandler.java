@@ -10,7 +10,7 @@ import ru.yandex.practicum.telemetry.collector.service.handler.SensorEventHandle
 
 import java.time.Instant;
 
-import static ru.yandex.practicum.telemetry.collector.configuration.KafkaConfig.TopicType.SENSORS_EVENTS;
+import static ru.yandex.practicum.telemetry.collector.config.KafkaConfig.TopicType.SENSORS_EVENTS;
 
 @Slf4j
 @RequiredArgsConstructor
