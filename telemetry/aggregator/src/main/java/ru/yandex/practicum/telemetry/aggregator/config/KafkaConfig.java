@@ -30,32 +30,6 @@ public class KafkaConfig {
         private Properties properties;
     }
 
-//    @Getter
-//    public static class ProducerConfig {
-//        private final Properties properties;
-//        private final EnumMap<TopicType, String> topics = new EnumMap<>(TopicType.class);
-//
-//        public ProducerConfig(Properties properties, Map<String, String> topics) {
-//            this.properties = properties;
-//            for (Map.Entry<String, String> entry : topics.entrySet()) {
-//                this.topics.put(TopicType.from(entry.getKey()), entry.getValue());
-//            }
-//        }
-//    }
-
-//    @Getter
-//    public static class ConsumerConfig {
-//        private final Properties properties;
-//        private final EnumMap<TopicType, String> topics = new EnumMap<>(TopicType.class);
-//
-//        public ConsumerConfig(Properties properties, Map<String, String> topics) {
-//            this.properties = properties;
-//            for (Map.Entry<String, String> entry : topics.entrySet()) {
-//                this.topics.put(TopicType.from(entry.getKey()), entry.getValue());
-//            }
-//        }
-//    }
-
     public enum TopicType {
         SENSOR_EVENTS("sensors-events"),
         SNAPSHOT_EVENTS("snapshots-events");

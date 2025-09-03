@@ -1,6 +1,5 @@
 package ru.yandex.practicum.telemetry.aggregator.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -28,7 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+//@NoArgsConstructor
 public class AggregationStarter {
 
     // ... объявление полей и конструктора ...

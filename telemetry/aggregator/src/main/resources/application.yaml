@@ -23,6 +23,6 @@ aggregator:
         "value.serializer": ru.yandex.practicum.kafka.serializer.GeneralEventAvroSerializer
         "linger.ms": 0
 
-      topics:
-        sensors-events: telemetry.sensors.v1
-        snapshots-events: telemetry.snapshots.v1
+    topics:
+      sensors-events: telemetry.sensors.v1
+      snapshots-events: telemetry.snapshots.v1
