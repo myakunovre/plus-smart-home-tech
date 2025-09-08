@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: "analyzer"
+    name: analyzer
 
   sql:
     init:
@@ -26,24 +26,24 @@ spring:
     password: analyzer
     driver-class-name: org.postgresql.Driver
 
-  logging:
-    level:
-      org:
-        springframework:
-          orm.jpa: INFO
-          transaction: INFO
-          transaction.interceptor: TRACE
-          orm.jpa.JpaTransactionManager: DEBUG
-      hibernate:
-        SQL: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        orm.jpa: INFO
+        transaction: INFO
+        transaction.interceptor: TRACE
+        orm.jpa.JpaTransactionManager: DEBUG
+    hibernate:
+      SQL: DEBUG
 
-  grpc:
-    client:
-      hub-router:
-        address: 'static://localhost:59090'
-        enableKeepAlive: true
-        keepAliveWithoutCalls: true
-        negotiationType: plaintext
+grpc:
+  client:
+    hub-router:
+      address: 'static://localhost:59090'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
 
 analyzer:
   kafka:
@@ -71,7 +71,8 @@ analyzer:
         "fetch.max.bytes": 3072000
         "max.partition.fetch.bytes": 3072000
         "enable.auto.commit": false
-        "auto.offset.reset": "latest"
+        "auto.offset.reset": "earliest"
+
 
     topics:
       hub-events: telemetry.hubs.v1
