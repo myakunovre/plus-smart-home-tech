@@ -13,9 +13,8 @@ import ru.yandex.practicum.telemetry.analyzer.dal.repository.ConditionRepository
 import ru.yandex.practicum.telemetry.analyzer.dal.repository.ScenarioRepository;
 import ru.yandex.practicum.telemetry.analyzer.dal.repository.SensorRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +32,37 @@ public class ScenarioService {
             return;
         }
 
+        // Сбор всех sensorId для пакетной проверки
+        Set<String> allSensorIds = scenario.getConditions().stream()
+                .map(ScenarioConditionAvro::getSensorId)
+                .collect(Collectors.toSet());
+        allSensorIds.addAll(scenario.getActions().stream()
+                .map(DeviceActionAvro::getSensorId)
+                .collect(Collectors.toSet()));
+
+        // Пакетная проверка существования всех сенсоров
+        List<Sensor> existingSensors = sensorRepository.findAllById(allSensorIds);
+        if (existingSensors.size() != allSensorIds.size()) {
+            Set<String> foundSensorIds = existingSensors.stream()
+                    .map(Sensor::getId)
+                    .collect(Collectors.toSet());
+            allSensorIds.forEach(sensorId -> {
+                if (!foundSensorIds.contains(sensorId)) {
+                    log.warn("Sensor with id '{}' not found in hub '{}'", sensorId, hubId);
+                }
+            });
+            throw new IllegalArgumentException("One or more sensors not found.");
+        }
+
         Scenario scenarioEntity = new Scenario();
         scenarioEntity.setName(scenario.getName());
         scenarioEntity.setHubId(hubId);
 
-        Map<String, Condition> conditions = new HashMap<>();
+        Map<String, Condition> conditionMap = new HashMap<>();
+        List<Condition> conditionsToSave = new ArrayList<>();
         List<ScenarioConditionAvro> conditionsAvro = scenario.getConditions();
         for (ScenarioConditionAvro conditionAvro : conditionsAvro) {
             String sensorId = conditionAvro.getSensorId();
-            if (!sensorRepository.existsById(sensorId)) {
-                log.warn("Sensor with id '{}' not found in hub '{}'", sensorId, hubId);
-                return;
-            }
             Condition condition = new Condition();
             condition.setType(ConditionType.valueOf(conditionAvro.getType().name()));
             condition.setOperation(ConditionOperation.valueOf(conditionAvro.getOperation().name()));
@@ -58,28 +76,27 @@ public class ScenarioService {
                     throw new IllegalArgumentException("Unexpected condition value type: " + rawValue.getClass());
                 }
             }
-            conditionRepository.save(condition);
-            conditions.put(sensorId, condition);
+            conditionsToSave.add(condition);
+            conditionMap.put(sensorId, condition);
         }
-        scenarioEntity.setConditions(conditions);
+        conditionRepository.saveAll(conditionsToSave);
+        scenarioEntity.setConditions(conditionMap);
 
-        Map<String, Action> actions = new HashMap<>();
+        Map<String, Action> actionsMap = new HashMap<>();
+        List<Action> actionsToSave = new ArrayList<>();
         List<DeviceActionAvro> actionsAvro = scenario.getActions();
         for (DeviceActionAvro actionAvro : actionsAvro) {
             String sensorId = actionAvro.getSensorId();
-            if (!sensorRepository.existsById(sensorId)) {
-                log.warn("Sensor with id '{}' not found in hub '{}'", sensorId, hubId);
-                return;
-            }
             Action action = new Action();
             action.setType(ActionType.valueOf(actionAvro.getType().name()));
             if (actionAvro.getValue() != null) {
                 action.setValue(actionAvro.getValue());
             }
-            actionRepository.save(action);
-            actions.put(sensorId, action);
+            actionsToSave.add(action);
+            actionsMap.put(sensorId, action);
         }
-        scenarioEntity.setActions(actions);
+        actionRepository.saveAll(actionsToSave);
+        scenarioEntity.setActions(actionsMap);
 
         scenarioRepository.save(scenarioEntity);
     }

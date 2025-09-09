@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class AggregationStarter {
 
-    // ... объявление полей и конструктора ...
     private final SnapshotService snapshotService = new SnapshotServiceImpl();
     private final Map<TopicPartition, OffsetAndMetadata> currentOffsets = new ConcurrentHashMap<>();
     private final EnumMap<KafkaConfig.TopicType, String> topics = new EnumMap<>(KafkaConfig.TopicType.class);
@@ -52,16 +51,9 @@ public class AggregationStarter {
      */
     public void start() {
         try {
-
-            // ... подготовка к обработке данных ...
-            // ... например, подписка на топик ...
             consumer.subscribe(List.of(topics.get(KafkaConfig.TopicType.SENSOR_EVENTS)));
 
-
-            // Цикл обработки событий
             while (true) {
-                // ... реализация цикла опроса ...
-                // ... и обработка полученных данных ...
                 ConsumerRecords<String, SpecificRecordBase> records = consumer.poll(CONSUME_ATTEMPT_TIMEOUT);
 
                 for (ConsumerRecord<String, SpecificRecordBase> record : records) {
@@ -83,19 +75,12 @@ public class AggregationStarter {
             }
 
         } catch (WakeupException ignored) {
-            // игнорируем - закрываем консьюмер и продюсер в блоке finally
             log.info("Consumer shutdown detected.");
         } catch (Exception e) {
             log.error("Ошибка во время обработки событий от датчиков", e);
         } finally {
 
             try {
-                // Перед тем, как закрыть продюсер и консьюмер, нужно убедиться,
-                // что все сообщения, лежащие в буффере, отправлены и
-                // все оффсеты обработанных сообщений зафиксированы
-
-                // здесь нужно вызвать метод продюсера для сброса данных в буффере
-                // здесь нужно вызвать метод консьюмера для фиксиции смещений
                 producer.flush();
                 if (!currentOffsets.isEmpty()) {
                     consumer.commitSync(currentOffsets);

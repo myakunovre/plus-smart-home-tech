@@ -6,19 +6,22 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.telemetry.analyzer.config.KafkaConfig;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @Slf4j
-public class HubEventProcessor implements Runnable {
+public class HubEventProcessor implements Runnable, DisposableBean {
     private final KafkaConsumer<String, SpecificRecordBase> consumer;
     private final HubEventService hubEventService;
     private final String topic;
+    private final AtomicBoolean running = new AtomicBoolean(true); // Флаг для контроля цикла
 
     private static final Duration CONSUME_ATTEMPT_TIMEOUT = Duration.ofMillis(1000);
 
@@ -37,7 +40,7 @@ public class HubEventProcessor implements Runnable {
         }));
         try {
             consumer.subscribe(List.of(topic));
-            while (true) {
+            while (running.get()) {
                 ConsumerRecords<String, SpecificRecordBase> records = consumer.poll(CONSUME_ATTEMPT_TIMEOUT);
                 for (ConsumerRecord<String, SpecificRecordBase> record : records) {
                     HubEventAvro event = handleRecord(record);
@@ -61,5 +64,12 @@ public class HubEventProcessor implements Runnable {
             throw new IllegalArgumentException("Unexpected record type: " + record.value().getClass());
         }
         return (HubEventAvro) record.value();
+    }
+
+    @Override
+    public void destroy() { // Метод из DisposableBean
+        log.info("HubEventProcessor: Destroy method called. Attempting to stop consumer.");
+        running.set(false); // Устанавливаем флаг в false для выхода из цикла
+        consumer.wakeup();  // Разбудить poll(), чтобы он вышел из try-блока
     }
 }

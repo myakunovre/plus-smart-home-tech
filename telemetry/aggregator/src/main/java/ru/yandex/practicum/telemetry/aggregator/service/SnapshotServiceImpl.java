@@ -31,16 +31,11 @@ public class SnapshotServiceImpl implements SnapshotService {
                                 .build()
         );
 
-        // помещаем данные со всех устройств хаба в мапу
         Map<String, SensorStateAvro> sensorState = snapshot.getSensorsState();
 
-        // если в мапе уже есть данные с сенсоров, то проверяем, изменились ли они
         if (sensorState.containsKey(event.getId())) {
             log.info("Данные сенсоров ранее уже были, сравниваем новое событие с текущим состоянием");
             SensorStateAvro oldState = sensorState.get(event.getId());
-            // если таймстемп у нового события более ранний, чем у текущего состояния,
-            // или данные нового события не меняет текущее состояние,
-            // то новое событие игнорируем, иначе обновляем текущее состояние
             if (oldState.getTimestamp().isAfter(event.getTimestamp()) ||
                     oldState.getData().equals(event.getPayload())) {
                 log.info("Обновление текущего состояния не требуется");
@@ -48,7 +43,6 @@ public class SnapshotServiceImpl implements SnapshotService {
             }
         }
 
-        // если дошли досюда, то требуется обновление текущего состояния снапшота
         log.info("Обновление текущего состояния требуется, сейчас буду обновлять");
         SensorStateAvro newState = SensorStateAvro.newBuilder()
                 .setTimestamp(event.getTimestamp())
