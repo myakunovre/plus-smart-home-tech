@@ -67,9 +67,9 @@ public class HubEventProcessor implements Runnable, DisposableBean {
     }
 
     @Override
-    public void destroy() { // Метод из DisposableBean
+    public void destroy() {
         log.info("HubEventProcessor: Destroy method called. Attempting to stop consumer.");
-        running.set(false); // Устанавливаем флаг в false для выхода из цикла
-        consumer.wakeup();  // Разбудить poll(), чтобы он вышел из try-блока
+        running.set(false);
+        consumer.wakeup();
     }
 }

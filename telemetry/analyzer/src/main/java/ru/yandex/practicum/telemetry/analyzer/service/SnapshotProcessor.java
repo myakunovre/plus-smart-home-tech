@@ -88,9 +88,9 @@ public class SnapshotProcessor implements Runnable, DisposableBean {
     }
 
     @Override
-    public void destroy() { // Метод из DisposableBean
+    public void destroy() {
         log.info("SnapshotProcessor: Destroy method called. Attempting to stop consumer.");
-        running.set(false); // Устанавливаем флаг в false
-        consumer.wakeup();  // Разбудить poll()
+        running.set(false);
+        consumer.wakeup();
     }
 }
