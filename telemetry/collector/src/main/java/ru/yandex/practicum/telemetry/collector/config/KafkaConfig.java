@@ -12,6 +12,7 @@ import java.util.Properties;
 @Getter
 @Setter
 @ToString
+//@Configuration
 @ConfigurationProperties("collector.kafka")
 public class KafkaConfig {
     private ProducerConfig producer;
@@ -39,6 +40,7 @@ public class KafkaConfig {
                 }
             }
             return null;
+//            throw new IllegalArgumentException("Unknown TopicType: " + type);
         }
     }
 }

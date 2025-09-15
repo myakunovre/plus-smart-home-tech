@@ -1,28 +1,12 @@
 spring:
   application:
-    name: "aggregator"
+    name: aggregator
+  config:
+    import: configserver:http://localhost:8888
 
-aggregator:
-  kafka:
-    consumer:
-      properties:
-        "bootstrap.servers": localhost:9092
-        "client.id": "telemetry.aggregator"
-        "group.id": "aggregator.group.id"
-        "key.deserializer": org.apache.kafka.common.serialization.StringDeserializer
-        "value.deserializer": ru.yandex.practicum.kafka.deserializer.SensorEventAvroDeserializer
-        "max.poll.records": 100
-        "fetch.max.bytes": 3072000
-        "max.partition.fetch.bytes": 3072000
-
-    producer:
-      properties:
-        "bootstrap.servers": localhost:9092
-        "client.id": "telemetry.aggregator"
-        "key.serializer": org.apache.kafka.common.serialization.StringSerializer
-        "value.serializer": ru.yandex.practicum.kafka.serializer.GeneralEventAvroSerializer
-        "linger.ms": 0
-
-    topics:
-      sensors-events: telemetry.sensors.v1
-      snapshots-events: telemetry.snapshots.v1
+cloud:
+  config:
+    fail-fast: true
+    retry:
+      useRandomPolicy: true
+      max-interval: 6000
