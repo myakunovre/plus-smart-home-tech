@@ -19,6 +19,6 @@ resilience4j:
   circuitbreaker:
     instances:
       warehouse:
-        slidingWindowSize: 10
+        slidingWindowSize: 50
         failureRateThreshold: 50
         waitDurationInOpenState: 60s
