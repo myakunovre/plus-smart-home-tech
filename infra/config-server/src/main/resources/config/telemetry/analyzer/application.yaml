@@ -2,8 +2,11 @@ server:
   port: 8081
 
 spring:
-  application:
-    name: analyzer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/analyzer
+    username: analyzer
+    password: analyzer
+    driver-class-name: org.postgresql.Driver
 
   sql:
     init:
@@ -19,12 +22,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show_sql: true
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/analyzer
-    username: analyzer
-    password: analyzer
-    driver-class-name: org.postgresql.Driver
 
 logging:
   level:
