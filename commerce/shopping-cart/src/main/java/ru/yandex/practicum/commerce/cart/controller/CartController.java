@@ -22,8 +22,8 @@ public class CartController implements CartFeignClient {
 
     @Override
     @GetMapping
-    public ShoppingCartDto getShoppingCart(@Valid @NotEmpty @RequestParam String userName) {
-        return service.getShoppingCart(userName);
+    public ShoppingCartDto getShoppingCart(@Valid @NotEmpty @RequestParam String username) {
+        return service.getShoppingCart(username);
     }
 
     @Override
