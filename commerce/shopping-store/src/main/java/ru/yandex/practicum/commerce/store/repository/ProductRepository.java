@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import ru.yandex.practicum.commerce.store.model.Product;
 
 import java.util.UUID;
@@ -20,11 +19,11 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Transactional
     @Modifying
     @Query("update Product p set p.productState = :state where p.productId = :productId")
-    int updateProductState(@Param("productId") UUID productId, @Param("state") ProductState state);
+    int updateProductState(UUID productId, ProductState state);
 
     @Transactional
     @Modifying
     @Query("update Product p set p.quantityState = :state where p.productId = :productId")
-    int updateProductQuantityState(@Param("productId") UUID productId, @Param("state") QuantityState state);
+    int updateProductQuantityState(UUID productId, QuantityState state);
 
 }

@@ -11,7 +11,7 @@ spring:
 logging:
   level:
     org.springframework.web: DEBUG
-    org.springframework.http: TRACE
+    org.springframework.http: DEBUG
     org.slf4j: DEBUG
     ru.practicum: DEBUG
 
