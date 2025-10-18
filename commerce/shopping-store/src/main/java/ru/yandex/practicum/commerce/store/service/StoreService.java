@@ -6,6 +6,7 @@ import interaction.model.store.enums.QuantityState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface StoreService {
@@ -20,4 +21,6 @@ public interface StoreService {
     boolean deleteProductById(UUID id);
 
     boolean updateQuantity(UUID id, QuantityState state);
+
+    List<ProductDto> getProductsByIds(List<UUID> productIds);
 }

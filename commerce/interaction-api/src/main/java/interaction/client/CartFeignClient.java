@@ -25,10 +25,10 @@ public interface CartFeignClient {
     void deactivateShoppingCart(@Valid @NotEmpty @RequestParam String username);
 
     @PostMapping("/remove")
-    ShoppingCartDto removeProducts(@Valid @NotEmpty String username,
+    ShoppingCartDto removeProducts(@Valid @NotEmpty @RequestParam String username,
                                    @RequestBody List<UUID> productIds);
 
     @PostMapping("/change-quantity")
-    ShoppingCartDto changeProductQuantity(@Valid @NotEmpty String username,
+    ShoppingCartDto changeProductQuantity(@Valid @NotEmpty @RequestParam String username,
                                           @RequestBody ChangeProductQuantityRequest request);
 }

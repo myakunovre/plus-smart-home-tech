@@ -6,6 +6,7 @@ import interaction.model.cart.ShoppingCartDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.commerce.cart.service.ShoppingCartService;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/shopping-cart")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class CartController implements CartFeignClient {
 
     private final ShoppingCartService service;
@@ -23,6 +25,7 @@ public class CartController implements CartFeignClient {
     @Override
     @GetMapping
     public ShoppingCartDto getShoppingCart(@Valid @NotEmpty @RequestParam String username) {
+        log.debug("Новый запрос на получение корзины от пользователя {}", username);
         return service.getShoppingCart(username);
     }
 
@@ -41,14 +44,14 @@ public class CartController implements CartFeignClient {
 
     @Override
     @PostMapping("/remove")
-    public ShoppingCartDto removeProducts(@Valid @NotEmpty String username,
+    public ShoppingCartDto removeProducts(@Valid @NotEmpty @RequestParam String username,
                                           @RequestBody List<UUID> productIds) {
         return service.removeProductFromCart(username, productIds);
     }
 
     @Override
     @PostMapping("/change-quantity")
-    public ShoppingCartDto changeProductQuantity(@Valid @NotEmpty String username,
+    public ShoppingCartDto changeProductQuantity(@Valid @NotEmpty @RequestParam String username,
                                                  @RequestBody ChangeProductQuantityRequest request) {
         return service.changeProductQuantity(username, request);
     }

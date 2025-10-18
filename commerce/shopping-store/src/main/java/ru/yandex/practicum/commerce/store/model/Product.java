@@ -44,5 +44,5 @@ public class Product {
     private ProductCategory productCategory;
 
     @Column(name = "price", nullable = false)
-    private Float price;
+    private Double price;
 }

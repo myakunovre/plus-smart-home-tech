@@ -13,6 +13,7 @@ import ru.yandex.practicum.commerce.store.mapper.ProductMapper;
 import ru.yandex.practicum.commerce.store.model.Product;
 import ru.yandex.practicum.commerce.store.repository.ProductRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -60,5 +61,12 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public boolean updateQuantity(UUID uuid, QuantityState state) {
         return repository.updateProductQuantityState(uuid, state) > 0;
+    }
+
+    @Override
+    public List<ProductDto> getProductsByIds(List<UUID> productIds) {
+        return repository.findByProductIdIn(productIds).stream()
+                .map(mapper::productToProductDto)
+                .toList();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @FeignClient(name = "shopping-store", path = "/api/v1/shopping-store")
@@ -30,4 +31,7 @@ public interface StoreFeignClient {
 
     @GetMapping("/{productId}")
     ProductDto getProduct(@PathVariable UUID productId);
+
+    @GetMapping("/by-ids")
+    List<ProductDto> getProductsByIds(@PathVariable List<UUID> productIds);
 }

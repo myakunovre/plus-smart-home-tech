@@ -11,10 +11,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import ru.yandex.practicum.commerce.store.model.Product;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     Page<Product> findAllByProductCategory(ProductCategory productCategory, Pageable pageable);
+
+    List<Product> findByProductIdIn(List<UUID> productIds);
 
     @Transactional
     @Modifying
@@ -25,5 +28,4 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Modifying
     @Query("update Product p set p.quantityState = :state where p.productId = :productId")
     int updateProductQuantityState(UUID productId, QuantityState state);
-
 }
